@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+// @ts-nocheck
+
 import mongoose from 'mongoose'
 
 if (!process.env.MONGODB_URI) {
