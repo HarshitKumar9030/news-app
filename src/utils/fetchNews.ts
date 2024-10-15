@@ -24,7 +24,7 @@ export async function fetchAndStoreNews(options: FetchOptions = {}) {
     for (const ctry of countriesToFetch) {
       try {
         const params: any = {
-          pageSize: 100, // Amount of news recieveing from the API
+          pageSize: 40, // Amount of news recieveing from the API
         };
 
         if (cat !== 'all') params.category = cat;
