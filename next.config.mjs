@@ -1,24 +1,23 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true,
 };
 
-const setupCronJob = async () => {
-  try {
-    const { fetchAndStoreNews } = await import('./src/utils/fetchNews');
-    const cron = (await import('node-cron')).default;
+// const setupCronJob = async () => {
+//   try {
+//     const { fetchAndStoreNews } = await import('./src/utils/fetchNews');
+//     const cron = (await import('node-cron')).default;
     
-    // Schedule the cron job to run every 6 hours
-    cron.schedule('0 */6 * * *', () => {
-      console.log('Fetching news...');
-      fetchAndStoreNews();
-    });
-  } catch (error) {
-    console.error('Failed to setup cron job:', error);
-  }
-};
+//     // Schedule the cron job to run every 6 hours
+//     cron.schedule('0 */6 * * *', () => {
+//       console.log('Fetching news...');
+//       fetchAndStoreNews();
+//     });
+//   } catch (error) {
+//     console.error('Failed to setup cron job:', error);
+//   }
+// };
 
-// Setup the cron job
-setupCronJob();
+// // Setup the cron job
+// setupCronJob();
 
 export default nextConfig;
