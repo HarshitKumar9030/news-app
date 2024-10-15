@@ -1,101 +1,117 @@
-import Image from "next/image";
+'use client'
+
+import { useState } from "react"
+import { Suspense } from "react"
+import NewsList from "./components/NewsList"
+import ThemeToggle from "@/components/ThemeToggle"
+import CalendarNews from "@/app/components/CalendarNews"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Button } from "@/components/ui/button"
+import { ArrowUp, Calendar, Newspaper } from "lucide-react"
+import { Skeleton } from "@/components/ui/skeleton"
+import Footer from "@/components/Footer"
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const [showScrollToTop, setShowScrollToTop] = useState(false)
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  const handleScroll = () => {
+    if (window.scrollY > 300) {
+      setShowScrollToTop(true)
+    } else {
+      setShowScrollToTop(false)
+    }
+  }
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
+  if (typeof window !== 'undefined') {
+    window.addEventListener('scroll', handleScroll)
+  }
+
+  return (
+    <main className="min-h-screen bg-background text-foreground">
+      <header className="bg-card shadow-sm sticky top-0 z-10">
+        <div className="container mx-auto px-4 py-6 flex justify-between items-center">
+          <div className="flex flex-col space-y-2">
+            <h1 className="text-3xl md:text-4xl font-bold">Current Affairs</h1>
+            <div className="text-sm text-muted-foreground">Made by Harshit ~</div>
+          </div>
+          <ThemeToggle />
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+        <div className="w-full h-[0.1rem] bg-secondary"></div>
+      </header>
+
+      <section className="bg-primary text-primary-foreground py-16">
+        <div className="container mx-auto px-4 text-center">
+          <h2 className="text-4xl font-bold mb-4">Stay Informed, Stay Ahead</h2>
+          <p className="text-xl">Your daily dose of current affairs and historical insights</p>
+        </div>
+      </section>
+
+      <div className="container mx-auto px-4 py-8">
+        <Tabs defaultValue="calendar" className="space-y-4">
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="calendar">
+              <Calendar className="mr-2 h-4 w-4" />
+              On This Day
+            </TabsTrigger>
+            <TabsTrigger value="news">
+              <Newspaper className="mr-2 h-4 w-4" />
+              Latest News
+            </TabsTrigger>
+          </TabsList>
+          <TabsContent value="calendar">
+            <Suspense fallback={<CalendarNewsSkeleton />}>
+              <CalendarNews />
+            </Suspense>
+          </TabsContent>
+          <TabsContent value="news">
+            <Suspense fallback={<NewsListSkeleton />}>
+              <NewsList />
+            </Suspense>
+          </TabsContent>
+        </Tabs>
+      </div>
+
+      <Footer />
+
+      {showScrollToTop && (
+        <Button
+          className="fixed bottom-4 right-4 rounded-full p-2"
+          onClick={scrollToTop}
+          aria-label="Scroll to top"
         >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+          <ArrowUp className="h-6 w-6" />
+        </Button>
+      )}
+    </main>
+  )
+}
+
+function CalendarNewsSkeleton() {
+  return (
+    <div className="space-y-4">
+      <Skeleton className="h-12 w-full" />
+      <div className="space-y-2">
+        {[...Array(5)].map((_, i) => (
+          <Skeleton key={i} className="h-20 w-full" />
+        ))}
+      </div>
     </div>
-  );
+  )
+}
+
+function NewsListSkeleton() {
+  return (
+    <div className="space-y-4">
+      <Skeleton className="h-12 w-full" />
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {[...Array(6)].map((_, i) => (
+          <Skeleton key={i} className="h-64 w-full" />
+        ))}
+      </div>
+    </div>
+  )
 }
